@@ -9,12 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kotlin-grpc-client</artifactId>
+    <artifactId>kotlin-grpc-keyvalue-service</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty</artifactId>
+            <artifactId>grpc-all</artifactId>
+            <version>${grpc.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
@@ -32,12 +33,6 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>flaviof.samples.kotlin</groupId>
-            <artifactId>kotlin-grpc-user-service</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -64,7 +59,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>grpc.client.GrpcClientKt</mainClass>
+                    <mainClass>grpc.service.kv.GrpcServerKt</mainClass>
                 </configuration>
             </plugin>
         </plugins>

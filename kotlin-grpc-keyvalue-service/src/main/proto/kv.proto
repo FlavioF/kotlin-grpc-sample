@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package services;
+
+option java_multiple_files = true;
+option java_package = "services";
+option java_outer_classname = "KeyValueServiceProtos";
+
+service KeyValueService {
+    rpc put(PutRequest) returns (PutResponse) {}
+    rpc get(GetRequest) returns (GetResponse) {}
+}
+
+message PutRequest {
+    string key = 1;
+    string value = 2;
+}
+
+message PutResponse {
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetResponse {
+    string key = 1;
+    string value = 2;
+}
