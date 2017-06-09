@@ -1,46 +1,48 @@
 package grpc.service.kv
 
-import com.google.common.collect.ImmutableMap
-import com.google.common.collect.Maps
 import io.grpc.stub.StreamObserver
 import services.GetRequest
 import services.GetResponse
 import services.KeyValueServiceGrpc.KeyValueServiceImplBase
 import services.PutRequest
 import services.PutResponse
-import java.util.*
 
 class KeyValueService : KeyValueServiceImplBase() {
 
-    internal var store: MutableMap<String, String> = Maps.newHashMap(ImmutableMap.builder<String, String>()
-            .put("flavio.emailAddress", "flavio@gmail.com")
-            .put("flavio.country", "PT")
-            .put("flavio.active", "true")
-            .put("carol.emailAddress", "carol@gmail.com")
-            .put("carol.country", "UK")
-            .put("carol.active", "true")
-            .put("ines.emailAddress", "ines@gmail.com")
-            .put("ines.country", "Spain")
-            .put("ines.active", "false")
-            .build()
+    val names = listOf("radha", "kanti", "chanda", "kali")
+
+    internal var store: MutableMap<String, String> = hashMapOf(
+            "${names[0]}.email" to "${names[0]}@gmail.com",
+            "${names[0]}.country" to "Portugal",
+            "${names[0]}.active" to "true",
+            "${names[1]}.email" to "${names[1]}@gmail.com",
+            "${names[1]}.country" to "France",
+            "${names[1]}.active" to "true",
+            "${names[2]}.email" to "${names[2]}@gmail.com",
+            "${names[2]}.country" to "Spain",
+            "${names[2]}.active" to "true",
+            "${names[3]}.email" to "${names[3]}@gmail.com",
+            "${names[3]}.country" to "UK",
+            "${names[3]}.active" to "false"
     )
 
     override fun put(request: PutRequest, responseObserver: StreamObserver<PutResponse>) {
-        store.put(request.key, request.value)
+        store.put(request.key ?: throw IllegalArgumentException("key can not be null"),
+                request.value ?: throw IllegalArgumentException("value can not be null")
+        )
         responseObserver.onNext(PutResponse.newBuilder().build())
         responseObserver.onCompleted()
     }
 
     override fun get(request: GetRequest, responseObserver: StreamObserver<GetResponse>) {
-        val response = GetResponse.newBuilder()
+        val response = GetResponse
+                .newBuilder()
+                .setValue(
+                        store[request.key ?: throw IllegalArgumentException("key can not be null")]
+                                ?: throw IllegalArgumentException("${request.key} key not found")
+                ).build()
 
-        val value = store[request.key]
-
-        if (value != null) {
-            response.value = value
-        }
-
-        responseObserver.onNext(response.build())
+        responseObserver.onNext(response)
         responseObserver.onCompleted()
     }
 

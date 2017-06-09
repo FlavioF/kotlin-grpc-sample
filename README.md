@@ -10,16 +10,22 @@ The user service must get data from the key value service to provide all informa
 * Maven
 
 ### About gRPC
+...
 
 ### About Kotlin
+...
 
 ## Try it
 
 ### Run key value service
+```
 mvn -pl kotlin-grpc-keyvalue-service exec:java
-
+```
 ### Run user service
+```
 mvn -pl kotlin-grpc-user-service exec:java
-
+```
 ### Run the client
+```
 mvn -pl kotlin-grpc-client exec:java
+```

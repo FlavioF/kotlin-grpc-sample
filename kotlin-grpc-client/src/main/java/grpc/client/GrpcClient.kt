@@ -1,3 +1,5 @@
+package grpc.client
+
 import com.google.common.collect.Iterators
 import io.grpc.ManagedChannelBuilder
 import services.UserRequest
@@ -10,13 +12,13 @@ fun main(args: Array<String>) {
     val blockingStub = UserServiceGrpc.newBlockingStub(channel)
 
     try {
-        val users = Iterators.cycle("flavio", "carol", "ines")
+        val users = Iterators.cycle("radha", "kanti", "chanda", "kali")
         var i = 0
         while (users.hasNext() && i < 100) {
 
             val request = UserRequest.newBuilder().setName(users.next()).build()
 
-            println("Response from server: ${blockingStub.getUser(request)}")
+            println("Response from server:\n${blockingStub.getUser(request)}")
             i++
         }
 

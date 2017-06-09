@@ -13,26 +13,23 @@ class UserService(keyValue: KeyValueServiceBlockingStub) : UserServiceImplBase()
     private val keyValue = Preconditions.checkNotNull(keyValue)
 
     override fun getUser(request: UserRequest, responseObserver: StreamObserver<UserResponse>) {
-        val response = UserResponse.newBuilder()
 
-        response.name = request.name
+        fun getValue(key: String) = keyValue.get(
+                GetRequest
+                        .newBuilder()
+                        .setKey(request.name + key)
+                        .build() ?: throw IllegalArgumentException("key not found")
+        ).value
 
-        response.emailAddress = keyValue.get(GetRequest.newBuilder()
-                .setKey(request.name + ".emailAddress")
-                .build())
-                .value
+        val response = UserResponse
+                .newBuilder()
+                .setName(request?.name ?: throw IllegalArgumentException("name can not be null"))
+                .setEmailAddress(getValue(".email"))
+                .setCountry(getValue(".country"))
+                .setActive(getValue(".active").toBoolean())
+                .build()
 
-        response.country = keyValue.get(GetRequest.newBuilder()
-                .setKey(request.name + ".country")
-                .build())
-                .value
-
-        response.active = java.lang.Boolean.valueOf(keyValue.get(GetRequest.newBuilder()
-                .setKey(request.name + ".active")
-                .build())
-                .value)!!
-
-        responseObserver.onNext(response.build())
+        responseObserver.onNext(response)
         responseObserver.onCompleted()
     }
 

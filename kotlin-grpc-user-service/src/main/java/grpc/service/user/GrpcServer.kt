@@ -1,8 +1,8 @@
-import grpc.service.user.UserService
+package grpc.service.user
+
 import io.grpc.ManagedChannelBuilder
 import io.grpc.ServerBuilder
 import services.KeyValueServiceGrpc
-
 
 fun main(args: Array<String>) {
 
@@ -12,10 +12,10 @@ fun main(args: Array<String>) {
     val server = ServerBuilder.forPort(15001).addService(UserService(kvsClient)).build()
     server.start()
 
-    println("Server started")
+    println("User service started")
 
     Runtime.getRuntime().addShutdownHook(Thread() { println("Ups, JVM shutdown") })
     server.awaitTermination()
 
-    println("Server stopped")
+    println("User service stopped")
 }
