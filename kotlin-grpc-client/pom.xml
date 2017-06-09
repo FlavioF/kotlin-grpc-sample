@@ -26,15 +26,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java-util</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>flaviof.samples.kotlin</groupId>
             <artifactId>kotlin-grpc-user-service</artifactId>
             <version>1.0-SNAPSHOT</version>

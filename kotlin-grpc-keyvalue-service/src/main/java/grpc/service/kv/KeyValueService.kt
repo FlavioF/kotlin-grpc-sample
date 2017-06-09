@@ -10,9 +10,6 @@ import services.PutRequest
 import services.PutResponse
 import java.util.*
 
-/**
- * Created by fferreira on 03-06-2017.
- */
 class KeyValueService : KeyValueServiceImplBase() {
 
     internal var store: MutableMap<String, String> = Maps.newHashMap(ImmutableMap.builder<String, String>()
