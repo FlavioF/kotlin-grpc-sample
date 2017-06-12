@@ -17,6 +17,11 @@ The user service must get data from the key value service to provide all informa
 
 ## Try it
 
+
+**Build**
+```
+mvn clean install
+```
 ### Run key value service
 ```
 mvn -pl kotlin-grpc-keyvalue-service exec:java
