@@ -6,7 +6,7 @@ import services.KeyValueServiceGrpcKt
 
 fun main(args: Array<String>) {
 
-    val channel = ManagedChannelBuilder.forAddress("localhost", 15000).usePlaintext(true).build()
+    val channel = ManagedChannelBuilder.forAddress("localhost", 15000).usePlaintext().build()
     val kvsClient = KeyValueServiceGrpcKt.newStub(channel)
 
     val server = ServerBuilder.forPort(15001).addService(UserService(kvsClient)).build()
@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
 
     println("User service started")
 
-    Runtime.getRuntime().addShutdownHook(Thread() { println("Ups, JVM shutdown") })
+    Runtime.getRuntime().addShutdownHook(Thread { println("Ups, JVM shutdown") })
     server.awaitTermination()
 
     println("User service stopped")

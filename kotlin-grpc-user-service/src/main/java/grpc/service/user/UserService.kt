@@ -1,35 +1,32 @@
 package grpc.service.user
 
-import com.google.common.base.Preconditions
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.async
 import services.GetRequest
 import services.KeyValueServiceGrpcKt.KeyValueServiceKtStub
 import services.UserRequest
 import services.UserResponse
 import services.UserServiceGrpcKt.UserServiceImplBase
 
-class UserService(keyValue: KeyValueServiceKtStub) : UserServiceImplBase() {
+class UserService(private val keyValue: KeyValueServiceKtStub) : UserServiceImplBase() {
 
-    private val keyValue = Preconditions.checkNotNull(keyValue)
-
-    override fun getUser(request: UserRequest): Deferred<UserResponse> = async {
-        fun getValue(key: String) = keyValue.get(
+    override suspend fun getUser(request: UserRequest): UserResponse {
+        suspend fun getValue(key: String) = keyValue.get(
                 GetRequest
                         .newBuilder()
                         .setKey(request.name + key)
                         .build() ?: throw IllegalArgumentException("key not found")
         )
 
-        val email = getValue(".email")
-        val country = getValue(".country")
-        val active = getValue(".active")
-        UserResponse
+        val email = async { getValue(".email") }
+        val country = async { getValue(".country") }
+        val active = async { getValue(".active") }
+
+        return UserResponse
                 .newBuilder()
                 .setName(request.name ?: throw IllegalArgumentException("name can not be null"))
                 .setEmailAddress(email.await().value)
                 .setCountry(country.await().value)
-                .setActive(active.await().value.toBoolean())
+                .setActive(active.await().value?.toBoolean() ?: false)
                 .build()
     }
 

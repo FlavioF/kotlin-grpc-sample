@@ -7,7 +7,7 @@ fun main(args: Array<String>) {
 
     println("Key value service started")
 
-    Runtime.getRuntime().addShutdownHook(Thread() { println("Ups, JVM shutdown") })
+    Runtime.getRuntime().addShutdownHook(Thread { println("Ups, JVM shutdown") })
     server.awaitTermination()
 
     println("Key value service stopped")

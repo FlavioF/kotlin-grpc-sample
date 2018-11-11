@@ -1,7 +1,5 @@
 package grpc.service.kv
 
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
 import services.GetRequest
 import services.GetResponse
 import services.KeyValueServiceGrpcKt.KeyValueServiceImplBase
@@ -27,15 +25,16 @@ class KeyValueService : KeyValueServiceImplBase() {
             "${names[3]}.active" to "false"
     )
 
-    override fun put(request: PutRequest): Deferred<PutResponse> = async {
+    override suspend fun put(request: PutRequest): PutResponse {
         store.put(request.key ?: throw IllegalArgumentException("key can not be null"),
-                request.value ?: throw IllegalArgumentException("value can not be null")
+            request.value ?: throw IllegalArgumentException("value can not be null")
         )
-        PutResponse.getDefaultInstance()
+
+        return PutResponse.getDefaultInstance()
     }
 
-    override fun get(request: GetRequest): Deferred<GetResponse> = async {
-        GetResponse
+    override suspend fun get(request: GetRequest): GetResponse {
+        return GetResponse
                 .newBuilder()
                 .setValue(
                         store[request.key ?: throw IllegalArgumentException("key can not be null")]
