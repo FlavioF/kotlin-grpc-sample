@@ -1,9 +1,8 @@
 package grpc.service.kv
 
-import io.grpc.stub.StreamObserver
 import services.GetRequest
 import services.GetResponse
-import services.KeyValueServiceGrpc.KeyValueServiceImplBase
+import services.KeyValueServiceGrpcKt.KeyValueServiceImplBase
 import services.PutRequest
 import services.PutResponse
 
@@ -26,25 +25,21 @@ class KeyValueService : KeyValueServiceImplBase() {
             "${names[3]}.active" to "false"
     )
 
-    override fun put(request: PutRequest, responseObserver: StreamObserver<PutResponse>) {
+    override suspend fun put(request: PutRequest): PutResponse {
         store.put(request.key ?: throw IllegalArgumentException("key can not be null"),
-                request.value ?: throw IllegalArgumentException("value can not be null")
+            request.value ?: throw IllegalArgumentException("value can not be null")
         )
-        responseObserver.onNext(PutResponse.newBuilder().build())
-        responseObserver.onCompleted()
+
+        return PutResponse.getDefaultInstance()
     }
 
-    override fun get(request: GetRequest, responseObserver: StreamObserver<GetResponse>) {
-        val response = GetResponse
+    override suspend fun get(request: GetRequest): GetResponse {
+        return GetResponse
                 .newBuilder()
                 .setValue(
                         store[request.key ?: throw IllegalArgumentException("key can not be null")]
                                 ?: throw IllegalArgumentException("${request.key} key not found")
                 ).build()
-
-        responseObserver.onNext(response)
-        responseObserver.onCompleted()
     }
-
 
 }

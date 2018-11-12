@@ -1,36 +1,33 @@
 package grpc.service.user
 
-import com.google.common.base.Preconditions
-import io.grpc.stub.StreamObserver
+import kotlinx.coroutines.async
 import services.GetRequest
-import services.KeyValueServiceGrpc.KeyValueServiceBlockingStub
+import services.KeyValueServiceGrpcKt.KeyValueServiceKtStub
 import services.UserRequest
 import services.UserResponse
-import services.UserServiceGrpc.UserServiceImplBase
+import services.UserServiceGrpcKt.UserServiceImplBase
 
-class UserService(keyValue: KeyValueServiceBlockingStub) : UserServiceImplBase() {
+class UserService(private val keyValue: KeyValueServiceKtStub) : UserServiceImplBase() {
 
-    private val keyValue = Preconditions.checkNotNull(keyValue)
-
-    override fun getUser(request: UserRequest, responseObserver: StreamObserver<UserResponse>) {
-
-        fun getValue(key: String) = keyValue.get(
+    override suspend fun getUser(request: UserRequest): UserResponse {
+        suspend fun getValue(key: String) = keyValue.get(
                 GetRequest
                         .newBuilder()
                         .setKey(request.name + key)
                         .build() ?: throw IllegalArgumentException("key not found")
-        ).value
+        )
 
-        val response = UserResponse
+        val email = async { getValue(".email") }
+        val country = async { getValue(".country") }
+        val active = async { getValue(".active") }
+
+        return UserResponse
                 .newBuilder()
-                .setName(request?.name ?: throw IllegalArgumentException("name can not be null"))
-                .setEmailAddress(getValue(".email"))
-                .setCountry(getValue(".country"))
-                .setActive(getValue(".active").toBoolean())
+                .setName(request.name ?: throw IllegalArgumentException("name can not be null"))
+                .setEmailAddress(email.await().value)
+                .setCountry(country.await().value)
+                .setActive(active.await().value?.toBoolean() ?: false)
                 .build()
-
-        responseObserver.onNext(response)
-        responseObserver.onCompleted()
     }
 
 }

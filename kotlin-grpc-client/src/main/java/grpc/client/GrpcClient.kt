@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
 
-    val channel = ManagedChannelBuilder.forAddress("localhost", 15001).usePlaintext(true).build()
+    val channel = ManagedChannelBuilder.forAddress("localhost", 15001).usePlaintext().build()
     val blockingStub = UserServiceGrpc.newBlockingStub(channel)
 
     try {
