@@ -2,12 +2,12 @@ package grpc.service.user
 
 import io.grpc.ManagedChannelBuilder
 import io.grpc.ServerBuilder
-import services.KeyValueServiceGrpcKt
+import services.KeyValueServiceGrpc
 
 fun main(args: Array<String>) {
 
     val channel = ManagedChannelBuilder.forAddress("localhost", 15000).usePlaintext().build()
-    val kvsClient = KeyValueServiceGrpcKt.newStub(channel)
+    val kvsClient = KeyValueServiceGrpc.newStub(channel)
 
     val server = ServerBuilder.forPort(15001).addService(UserService(kvsClient)).build()
     server.start()
