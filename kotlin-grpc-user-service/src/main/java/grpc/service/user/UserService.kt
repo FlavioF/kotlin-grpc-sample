@@ -2,12 +2,13 @@ package grpc.service.user
 
 import kotlinx.coroutines.async
 import services.GetRequest
-import services.KeyValueServiceGrpcKt.KeyValueServiceKtStub
+import services.KeyValueServiceGrpc.KeyValueServiceStub
 import services.UserRequest
 import services.UserResponse
-import services.UserServiceGrpcKt.UserServiceImplBase
+import services.UserServiceImplBase
+import services.get
 
-class UserService(private val keyValue: KeyValueServiceKtStub) : UserServiceImplBase() {
+class UserService(private val keyValue: KeyValueServiceStub) : UserServiceImplBase() {
 
     override suspend fun getUser(request: UserRequest): UserResponse {
         suspend fun getValue(key: String) = keyValue.get(

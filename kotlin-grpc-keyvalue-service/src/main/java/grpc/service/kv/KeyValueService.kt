@@ -2,7 +2,7 @@ package grpc.service.kv
 
 import services.GetRequest
 import services.GetResponse
-import services.KeyValueServiceGrpcKt.KeyValueServiceImplBase
+import services.KeyValueServiceImplBase
 import services.PutRequest
 import services.PutResponse
 
